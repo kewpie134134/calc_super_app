@@ -21,7 +21,6 @@ LEN_LAYOUT_Y = len(LAYOUT[0])
 CALC_SYMBOLS = ("+", "-", "*", "/")
 
 
-
 class CalcSuperApp(ttk.Frame):
     """電卓アプリ"""
 
@@ -85,6 +84,7 @@ class CalcSuperApp(ttk.Frame):
         self.master.rowconfigure(0, weight=1)
 
     def calc(self, event):
+        """電卓のボタンが押された時の処理"""
         # 押されたボタンのテキストを取得
         char = event.widget["text"]
 
@@ -129,6 +129,7 @@ class CalcSuperApp(ttk.Frame):
 
 
 def main():
+    """メイン関数"""
     root = Tk()
     root.title("Google電卓 by Python3")
     CalcSuperApp(root)
