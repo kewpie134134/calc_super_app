@@ -4,8 +4,8 @@ from tkinter import ttk
 # 2次元配列の通りに、girdでレイアウトを作成する
 LAYOUT = [
     ["(", ")", "%", "C"],
-    ["7", "8", "9", "/"],
-    ["4", "5", "6", "*"],
+    ["7", "8", "9", "÷"],
+    ["4", "5", "6", "×"],
     ["1", "2", "3", "-"],
     ["0", ".", "=", "+"],
 ]
@@ -17,9 +17,7 @@ LEN_LAYOUT_X = len(LAYOUT) + 1  # 計算窓の分を余計に1足す
 LEN_LAYOUT_Y = len(LAYOUT[0])
 
 # 記号をまとめた定数、if char in CALC_SYMBOLS:...のように使うために定義
-# CALC_SYMBOLS = ("+", "-", "*", "/", "**", "//")
-CALC_SYMBOLS = ("+", "-", "*", "/")
-
+CALC_SYMBOLS = ("+", "-", "×", "÷", ".")
 
 
 class CalcSuperApp(ttk.Frame):
@@ -85,6 +83,7 @@ class CalcSuperApp(ttk.Frame):
         self.master.rowconfigure(0, weight=1)
 
     def calc(self, event):
+        """電卓のボタンが押された時の処理"""
         # 押されたボタンのテキストを取得
         char = event.widget["text"]
 
@@ -95,20 +94,18 @@ class CalcSuperApp(ttk.Frame):
         if char == "=":
             if last in CALC_SYMBOLS:
                 self.exp_list.pop()
-            exp = eval("".join(self.exp_list))
+
+            # 式に×や÷がある場合、*と/に変更
+            pre_exp = [p.replace("×", "*").replace("÷", "/") for p in self.exp_list]
+
+            # evalで文字列を数字に変換して計算処理
+            exp = eval("".join(pre_exp))
             self.exp_list = [str(exp)]
         # Cボタン、内容クリア
         elif char == "C":
             self.exp_list = ["0"]
-        # +,-,*,/などの記号を押した場合
+        # +,-,×,÷などの記号を押した場合
         elif char in CALC_SYMBOLS:
-            """
-            階乗計算処理はここではコメントアウト
-            """
-            # if last == char == "/":
-            #     self.exp_list[-1] += "/"
-            # elif last == char == "*":
-            #     self.exp_list[-1] += "*"
             if last in CALC_SYMBOLS:
                 self.exp_list[-1] = char
             else:
@@ -129,6 +126,7 @@ class CalcSuperApp(ttk.Frame):
 
 
 def main():
+    """メイン関数"""
     root = Tk()
     root.title("Google電卓 by Python3")
     CalcSuperApp(root)
